@@ -159,14 +159,18 @@ namespace XmlXslxProject.UI.ViewModels
                 if (saveFileDialog.ShowDialog() == true)
                 {
                     _saveFileName = saveFileDialog.FileName;
+                    if (!_xmlXlsxBusinessLogic.SaveFile(_produkty, _zdjeciaPobrane, _saveFileName, _removeHtml))
+                    {
+                        MessageBox.Show($"Error while saving file: {FileName}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+
+                    }
+                    else
+                    {
+                        MessageBox.Show("File saved successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.None);
+                    }
                 }
 
-                if (!_xmlXlsxBusinessLogic.SaveFile(_produkty, _zdjeciaPobrane, _saveFileName, _removeHtml))
-                {
-                    MessageBox.Show($"Error while saving file: {FileName}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
                 GC.Collect();
-                MessageBox.Show("File saved successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.None);
                 CurrentProgress = 0;
                 ControlsEnabled = true;
             });
