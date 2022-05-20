@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\XmlXlsxProject.BusinessLogic.Interfaces\XmlXlsxProject.BusinessLogic.Interfaces.csproj" />
+    <ProjectReference Include="..\XmlXlsxProject.BusinessLogic\XmlXlsxProject.BusinessLogic.csproj" />
+    <ProjectReference Include="..\XmlXlsxProject.Models\XmlXlsxProject.Models.csproj" />
+  </ItemGroup>
+
+</Project>

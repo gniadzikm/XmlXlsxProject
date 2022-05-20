@@ -1,0 +1,57 @@
+﻿<Window x:Class="XmlXslxProject.UI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:XmlXslxProject.UI"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="600" Width="800" MinWidth="800" MinHeight="600">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" MinHeight="50" />
+            <RowDefinition Height="*" MinHeight="50" />
+            <RowDefinition Height="8*" MinHeight="250" />
+            <RowDefinition Height="*" MinHeight="50" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width=".5*" />
+                <ColumnDefinition Width=".5*" />
+                <ColumnDefinition Width=".5*" />
+                <ColumnDefinition Width=".5*" />
+            </Grid.ColumnDefinitions>
+            <TextBox Grid.Row="0" Grid.Column="0" IsReadOnly="True" IsEnabled="False" x:Name="tbFileName" Margin="1 2" Text="{Binding FileName}" />
+            <Button Grid.Row="0" Grid.Column="1" Content="Choose File" x:Name="btnOpenFileDialog" Margin="1 2" Command="{Binding GetFileCommand}" />
+            <Button Grid.Row="0" Grid.Column="2" Content="Save File" x:Name="btnSaveFile" Margin="1 2" Command="{Binding SaveFileCommand}" />
+        </Grid>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="10*" MinWidth="300" />
+                <ColumnDefinition Width="*" MinWidth="50" />
+            </Grid.ColumnDefinitions>
+
+        </Grid>
+        <Button x:Name="btnProcessFile" Content="Process file..." Grid.Row="1" Margin="0 2 0 2" Command="{Binding ProcessFileCommand}" />
+        <DataGrid Grid.Row="2" ItemsSource="{Binding Produkty}" AutoGenerateColumns="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Id" Binding="{Binding Id, Mode=TwoWay}" />
+                <DataGridTextColumn Header="Nazwa" Binding="{Binding Nazwa}" />
+                <DataGridTextColumn Header="Długi opis" Binding="{Binding DlugiOpis}" Width="100" />
+                <DataGridTextColumn Header="Dane techniczne" Binding="{Binding DaneTechniczne}" Width="100" />
+                <DataGridTextColumn Header="Waga" Binding="{Binding Waga}" />
+                <DataGridTextColumn Header="Kod" Binding="{Binding Kod}" />
+                <DataGridTextColumn Header="ean" Binding="{Binding EAN}" />
+                <DataGridTextColumn Header="Status" Binding="{Binding Status}" />
+                <DataGridTextColumn Header="Typ" Binding="{Binding Typ}" />
+                <DataGridTextColumn Header="Cena zewnętrzna hurt" Binding="{Binding CenaZewnetrznaHurt}" />
+                <DataGridTextColumn Header="Cena zewnętrzna" Binding="{Binding CenaZewnetrzna}" />
+                <DataGridTextColumn Header="VAT" Binding="{Binding Vat}" />
+                <DataGridTextColumn Header="Ilość wariantów" Binding="{Binding IloscWariantow}" />
+                <DataGridTextColumn Header="Marża" Binding="{Binding Marza}" />
+            </DataGrid.Columns>
+        </DataGrid>
+        <ProgressBar Value="{Binding CurrentProgress}" Maximum="{Binding MaxProgress}" Grid.Row="3" Margin="0 2" />
+    </Grid>
+</Window>
