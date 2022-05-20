@@ -13,6 +13,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using XmlXlsxProject.BusinessLogic;
+using XmlXlsxProject.BusinessLogic.Interfaces;
 using XmlXslxProject.UI.ViewModels;
 
 namespace XmlXslxProject.UI

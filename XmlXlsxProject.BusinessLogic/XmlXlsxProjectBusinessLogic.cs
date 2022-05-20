@@ -51,6 +51,8 @@ namespace XmlXlsxProject.BusinessLogic
             for (int i = 0; i < produkty.ListaProduktow.Count; ++i)
             {
                 AddDataRowAndFormatting(produkty.ListaProduktow[i], wsDane, removeHtml, i);
+
+                if (i >= zdjeciaPobrane.Count) continue;
                 AddPhotoRowAndFormatting(zdjeciaPobrane[i], wsZdjecia, i);
 
                 ReportProgress(this, new ReportProgressEventArgs
@@ -58,11 +60,6 @@ namespace XmlXlsxProject.BusinessLogic
                     Progress = i + 1
                 });
             }
-
-            //for (int i = 0; i < zdjeciaPobrane.Count; ++i)
-            //{
-                
-            //}
 
             wb.SaveAs(filepath);
 

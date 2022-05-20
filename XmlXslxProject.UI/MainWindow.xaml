@@ -4,7 +4,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:XmlXslxProject.UI"
+        xmlns:vrules="clr-namespace:XmlXslxProject.UI.ValidationRules"
         mc:Ignorable="d"
+        
         Title="MainWindow" Height="600" Width="800" MinWidth="800" MinHeight="600">
     <Grid Margin="10">
         <Grid.RowDefinitions>
@@ -47,21 +49,77 @@
             <TabItem Header="Dane">
                 <DataGrid IsEnabled="{Binding ControlsEnabled}" ItemsSource="{Binding Produkty}" AutoGenerateColumns="False">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Id" Binding="{Binding Id, Mode=TwoWay, ValidatesOnExceptions=True}" />
-                        <DataGridTextColumn Header="Nazwa" Binding="{Binding Nazwa}" />
-                        <DataGridTextColumn Header="Długi opis" Binding="{Binding DlugiOpis}" Width="100" />
-                        <DataGridTextColumn Header="Dane techniczne" Binding="{Binding DaneTechniczne}" Width="100" />
-                        <DataGridTextColumn Header="Waga" Binding="{Binding Waga}" />
-                        <DataGridTextColumn Header="Kod" Binding="{Binding Kod}" />
-                        <DataGridTextColumn Header="ean" Binding="{Binding EAN}" />
-                        <DataGridTextColumn Header="Status" Binding="{Binding Status}" />
+                        <DataGridTextColumn Header="Id">
+                            <DataGridTextColumn.Binding>
+                                <Binding Path="Id" Mode="TwoWay">
+                                    <Binding.ValidationRules>
+                                        <vrules:LongValidationRule />
+                                    </Binding.ValidationRules>
+                                </Binding>
+                            </DataGridTextColumn.Binding>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Header="Nazwa" Binding="{Binding Nazwa, Mode=TwoWay}" />
+                        <DataGridTextColumn Header="Długi opis" Binding="{Binding DlugiOpis, Mode=TwoWay}" Width="100" />
+                        <DataGridTextColumn Header="Dane techniczne" Binding="{Binding DaneTechniczne, Mode=TwoWay}" Width="100" />
+                        <DataGridTextColumn Header="Waga">
+                            <DataGridTextColumn.Binding>
+                                <Binding Path="Waga" Mode="TwoWay">
+                                    <Binding.ValidationRules>
+                                        <vrules:DecimalValidationRule />
+                                    </Binding.ValidationRules>
+                                </Binding>
+                            </DataGridTextColumn.Binding>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Header="Kod" Binding="{Binding Kod, Mode=TwoWay}" />
+                        <DataGridTextColumn Header="ean" Binding="{Binding EAN, Mode=TwoWay}" />
+                        <DataGridTextColumn Header="Status">
+                            <DataGridTextColumn.Binding>
+                                <Binding Path="Status" Mode="TwoWay">
+                                    <Binding.ValidationRules>
+                                        <vrules:LongValidationRule />
+                                    </Binding.ValidationRules>
+                                </Binding>
+                            </DataGridTextColumn.Binding>
+                        </DataGridTextColumn>
                         <DataGridTextColumn Header="Typ" Binding="{Binding Typ}" />
-                        <DataGridTextColumn Header="Cena zewnętrzna hurt" Binding="{Binding CenaZewnetrznaHurt}" />
-                        <DataGridTextColumn Header="Cena zewnętrzna" Binding="{Binding CenaZewnetrzna}" />
-                        <DataGridTextColumn Header="VAT" Binding="{Binding Vat}" />
-                        <DataGridTextColumn Header="Ilość wariantów" Binding="{Binding IloscWariantow}" />
-                        <DataGridTextColumn Header="Ilość zdjęć" Binding="{Binding IloscZdjec}" />
-                        <DataGridTextColumn Header="Marża" Binding="{Binding Marza}" />
+                        <DataGridTextColumn Header="Cena zewnętrzna hurt">
+                            <DataGridTextColumn.Binding>
+                                <Binding Path="CenaZewnetrznaHurt" Mode="TwoWay">
+                                    <Binding.ValidationRules>
+                                        <vrules:DecimalValidationRule />
+                                    </Binding.ValidationRules>
+                                </Binding>
+                            </DataGridTextColumn.Binding>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Header="Cena zewnętrzna">
+                            <DataGridTextColumn.Binding>
+                                <Binding Path="CenaZewnetrzna" Mode="TwoWay">
+                                    <Binding.ValidationRules>
+                                        <vrules:DecimalValidationRule />
+                                    </Binding.ValidationRules>
+                                </Binding>
+                            </DataGridTextColumn.Binding>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Header="VAT">
+                            <DataGridTextColumn.Binding>
+                                <Binding Path="Vat" Mode="TwoWay">
+                                    <Binding.ValidationRules>
+                                        <vrules:DecimalValidationRule />
+                                    </Binding.ValidationRules>
+                                </Binding>
+                            </DataGridTextColumn.Binding>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Header="Ilość wariantów">
+                            <DataGridTextColumn.Binding>
+                                <Binding Path="IloscWariantow" Mode="TwoWay">
+                                    <Binding.ValidationRules>
+                                        <vrules:LongValidationRule />
+                                    </Binding.ValidationRules>
+                                </Binding>
+                            </DataGridTextColumn.Binding>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Header="Ilość zdjęć" Binding="{Binding IloscZdjec}" IsReadOnly="True" />
+                        <DataGridTextColumn Header="Marża" Binding="{Binding Marza}" IsReadOnly="True" />
                     </DataGrid.Columns>
                     <DataGrid.RowStyle>
                         <Style TargetType="DataGridRow">
