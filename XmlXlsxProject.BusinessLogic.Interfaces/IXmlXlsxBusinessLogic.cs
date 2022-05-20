@@ -10,5 +10,6 @@ namespace XmlXlsxProject.BusinessLogic.Interfaces
     public interface IXmlXlsxBusinessLogic
     {
         bool ProcessFiles(ref Produkty? produkty, string filepath);
+        bool SaveFile(Produkty? produkty, string filepath);
     }
 }

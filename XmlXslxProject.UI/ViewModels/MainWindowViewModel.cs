@@ -16,6 +16,7 @@ namespace XmlXslxProject.UI.ViewModels
     internal class MainWindowViewModel : BaseViewModel
     {
         private string _fileName = string.Empty;
+        private string _saveFileName = string.Empty;
         private Produkty _produkty = new Produkty();
         private long _maxProgress = 100;
         private long _currentProgress;
@@ -69,7 +70,7 @@ namespace XmlXslxProject.UI.ViewModels
 
                 if (!_xmlXlsxBusinessLogic.ProcessFiles(ref produkty, FileName))
                 {
-                    MessageBox.Show("Error while processing the file", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show($"Error while processing the file: {FileName}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
 
@@ -96,7 +97,37 @@ namespace XmlXslxProject.UI.ViewModels
             });
         }
 
+        public async void SaveFile()
+        {
+            await Task.Run(() =>
+            {
+                SaveFileDialog saveFileDialog = new SaveFileDialog();
+
+                if (saveFileDialog.ShowDialog() == true)
+                {
+                    _saveFileName = saveFileDialog.FileName;
+                }
+
+                if (!_xmlXlsxBusinessLogic.SaveFile(_produkty, _saveFileName))
+                {
+                    MessageBox.Show($"Error while saving file: {FileName}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            });
+        }
+
+        public void ClearData()
+        {
+            FileName = string.Empty;
+            _saveFileName = string.Empty;
+            Produkty.Clear();
+            MaxProgress = 100;
+            CurrentProgress = 0;
+        }
+
         public ICommand ProcessFileCommand => new RelayCommand(ProcessFile);
         public ICommand GetFileCommand => new RelayCommand(GetFile);
+        public ICommand SaveFileCommand => new RelayCommand(SaveFile);
+
+        public ICommand ClearDataCommand => new RelayCommand(ClearData);
     }
 }

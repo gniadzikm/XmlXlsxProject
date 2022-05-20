@@ -25,6 +25,11 @@ namespace XmlXlsxProject.BusinessLogic
             return false;
         }
 
+        public bool SaveFile(Produkty? produkty, string filepath)
+        {
+            throw new NotImplementedException();
+        }
+
         private T? DeserializeToObject<T>(string filepath) where T : class
         {
             XmlSerializer xmlSerializer = new XmlSerializer(typeof(T));

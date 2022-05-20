@@ -9,8 +9,7 @@
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" MinHeight="50" />
-            <RowDefinition Height="*" MinHeight="50" />
-            <RowDefinition Height="8*" MinHeight="250" />
+            <RowDefinition Height="9*" MinHeight="250" />
             <RowDefinition Height="*" MinHeight="50" />
         </Grid.RowDefinitions>
 
@@ -21,10 +20,20 @@
                 <ColumnDefinition Width=".5*" />
                 <ColumnDefinition Width=".5*" />
                 <ColumnDefinition Width=".5*" />
+                <ColumnDefinition Width=".5*" />
             </Grid.ColumnDefinitions>
             <TextBox Grid.Row="0" Grid.Column="0" IsReadOnly="True" IsEnabled="False" x:Name="tbFileName" Margin="1 2" Text="{Binding FileName}" />
+            <Button Grid.Column="2" x:Name="btnProcessFile" Content="Process file..." Grid.Row="1" Margin="1 2" Command="{Binding ProcessFileCommand}" />
             <Button Grid.Row="0" Grid.Column="1" Content="Choose File" x:Name="btnOpenFileDialog" Margin="1 2" Command="{Binding GetFileCommand}" />
-            <Button Grid.Row="0" Grid.Column="2" Content="Save File" x:Name="btnSaveFile" Margin="1 2" Command="{Binding SaveFileCommand}" />
+            <Button Grid.Row="0" Grid.Column="3" Content="Save File" x:Name="btnSaveFile" Margin="1 2" Command="{Binding SaveFileCommand}" />
+            <StackPanel Grid.Row="0" Grid.Column="4">
+                <TextBlock Text="Remove XML from Długi opis" />
+                <ComboBox>
+                    <ComboBoxItem Content="Yes" />
+                    <ComboBoxItem Content="No" />
+                </ComboBox>
+            </StackPanel>
+            <Button Grid.Row="0" Grid.Column="5" Content="Clear data" x:Name="btnClearData" Margin="1 2" Command="{Binding ClearDataCommand}" />
         </Grid>
         <Grid>
             <Grid.ColumnDefinitions>
@@ -33,8 +42,7 @@
             </Grid.ColumnDefinitions>
 
         </Grid>
-        <Button x:Name="btnProcessFile" Content="Process file..." Grid.Row="1" Margin="0 2 0 2" Command="{Binding ProcessFileCommand}" />
-        <DataGrid Grid.Row="2" ItemsSource="{Binding Produkty}" AutoGenerateColumns="False">
+        <DataGrid Grid.Row="1" ItemsSource="{Binding Produkty}" AutoGenerateColumns="False">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Id" Binding="{Binding Id, Mode=TwoWay}" />
                 <DataGridTextColumn Header="Nazwa" Binding="{Binding Nazwa}" />
@@ -52,6 +60,6 @@
                 <DataGridTextColumn Header="Marża" Binding="{Binding Marza}" />
             </DataGrid.Columns>
         </DataGrid>
-        <ProgressBar Value="{Binding CurrentProgress}" Maximum="{Binding MaxProgress}" Grid.Row="3" Margin="0 2" />
+        <ProgressBar Value="{Binding CurrentProgress}" Maximum="{Binding MaxProgress}" Grid.Row="2" Margin="0 2" />
     </Grid>
 </Window>
