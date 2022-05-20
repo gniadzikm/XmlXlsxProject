@@ -25,6 +25,15 @@ namespace XmlXslxProject.UI.ViewModels
         private long _currentProgress;
         private bool _removeHtml = true;
         private IXmlXlsxBusinessLogic _xmlXlsxBusinessLogic = new XmlXlsxProjectBusinessLogic();
+        private bool _controlsEnabled = true;
+
+        public MainWindowViewModel()
+        {
+            _xmlXlsxBusinessLogic.ReportProgress += (sender, args) =>
+            {
+                CurrentProgress = args.Progress;
+            };
+        }
 
         public string FileName
         {
@@ -52,44 +61,8 @@ namespace XmlXslxProject.UI.ViewModels
             {
                 _zdjeciaPobrane = value;
                 OnPropertyChanged();
-                OnPropertyChanged("ZdjeciaPobraneDataTable");
             }
             get => _zdjeciaPobrane;
-        }
-
-        public DataTable ZdjeciaPobraneDataTable
-        {
-            get
-            {
-                if (!_zdjeciaPobrane.Any()) return new DataTable();
-
-                int maxImages = _zdjeciaPobrane.Max(zp => zp.PhotoPathList.Count);
-                DataTable resultDataTable = new DataTable();
-
-                resultDataTable.Columns.Add("Id");
-                for (int i = 0; i < maxImages; ++i)
-                {
-                    resultDataTable.Columns.Add("Zdjecie " + (i + 1), typeof(Bitmap));
-                }
-
-                foreach (ZdjeciePobrane zdjeciePobrane in _zdjeciaPobrane.Take(50))
-                {
-                    DataRow tempRow = resultDataTable.NewRow();
-                    tempRow[0] = zdjeciePobrane.Id;
-
-                    for (int i = 0; i < zdjeciePobrane.PhotoPathList.Count; ++i)
-                    {
-                        //tempRow[i + 1] = Image.FromFile(zdjeciePobrane.PhotoPathList[i]);
-                        Image img = Image.FromFile(zdjeciePobrane.PhotoPathList[i]);
-                        tempRow[i + 1] = img;
-                        img.Dispose();
-                    }
-
-                    resultDataTable.Rows.Add(tempRow);
-                }
-
-                return resultDataTable;
-            }
         }
 
         public long CurrentProgress
@@ -112,6 +85,16 @@ namespace XmlXslxProject.UI.ViewModels
             get => _maxProgress;
         }
 
+        public bool ControlsEnabled
+        {
+            get => _controlsEnabled;
+            set
+            {
+                _controlsEnabled = value;
+                OnPropertyChanged();
+            }
+        }
+
         public bool RemoveXml
         {
             set
@@ -126,6 +109,7 @@ namespace XmlXslxProject.UI.ViewModels
         {
             await Task.Run(() =>
             {
+                ControlsEnabled = false;
                 Produkty? produkty = null;
 
                 if (!_xmlXlsxBusinessLogic.ProcessFiles(ref produkty, FileName, _removeHtml))
@@ -142,6 +126,7 @@ namespace XmlXslxProject.UI.ViewModels
                 Produkty = new ObservableCollection<Produkt>(produkty.ListaProduktow);
                 MaxProgress = produkty.ListaProduktow.Count;
 
+                ControlsEnabled = true;
                 GC.Collect();
             });
         }
@@ -150,6 +135,7 @@ namespace XmlXslxProject.UI.ViewModels
         {
             await Task.Run(() =>
             {
+                ControlsEnabled = false;
                 OpenFileDialog openFileDialog = new OpenFileDialog();
                 openFileDialog.Filter = "Text files (*.txt)|*.txt|Xml files (*.xml)|*.xml|All files(*.*)|*.*";
 
@@ -158,6 +144,7 @@ namespace XmlXslxProject.UI.ViewModels
                     FileName = openFileDialog.FileName;
                 }
 
+                ControlsEnabled = true;
                 GC.Collect();
             });
         }
@@ -166,6 +153,7 @@ namespace XmlXslxProject.UI.ViewModels
         {
             await Task.Run(() =>
             {
+                ControlsEnabled = false;
                 SaveFileDialog saveFileDialog = new SaveFileDialog();
 
                 if (saveFileDialog.ShowDialog() == true)
@@ -177,12 +165,20 @@ namespace XmlXslxProject.UI.ViewModels
                 {
                     MessageBox.Show($"Error while saving file: {FileName}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
+                GC.Collect();
+                MessageBox.Show("File saved successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.None);
+                CurrentProgress = 0;
+                ControlsEnabled = true;
             });
         }
 
         public async void DownloadFiles()
         {
+            ControlsEnabled = false;
             ZdjeciaPobrane = await _xmlXlsxBusinessLogic.DownloadFiles(_produkty);
+            MessageBox.Show("Download finished!", "Success", MessageBoxButton.OK, MessageBoxImage.None);
+            CurrentProgress = 0;
+            ControlsEnabled = true;
             GC.Collect();
         }
 
@@ -194,7 +190,6 @@ namespace XmlXslxProject.UI.ViewModels
             ZdjeciaPobrane.Clear();
             MaxProgress = 100;
             CurrentProgress = 0;
-            OnPropertyChanged(nameof(ZdjeciaPobraneDataTable));
             GC.Collect();
         }
 

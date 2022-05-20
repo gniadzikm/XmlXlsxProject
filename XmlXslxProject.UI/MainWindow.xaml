@@ -28,13 +28,13 @@
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
                 <TextBox Grid.Row="0" Grid.Column="0" IsReadOnly="True" IsEnabled="False" x:Name="tbFileName" Margin="1 2" Text="{Binding FileName}" />
-                <CheckBox Grid.Row="1" IsChecked="{Binding RemoveXml, Mode=TwoWay}" Content="Remove HTML from Długi Opis" />
+                <CheckBox IsEnabled="{Binding ControlsEnabled}" Grid.Row="1" IsChecked="{Binding RemoveXml, Mode=TwoWay}" Content="Remove HTML from Długi Opis" />
             </Grid>
-            <Button Grid.Row="0" Grid.Column="1" Content="Choose File" x:Name="btnOpenFileDialog" Margin="1 2" Command="{Binding GetFileCommand}" />
-            <Button Grid.Column="2" x:Name="btnProcessFile" Content="Process file..." Grid.Row="1" Margin="1 2" Command="{Binding ProcessFileCommand}" />
-            <Button Grid.Column="3" x:Name="btnDownloadImages" Content="Download Images" Grid.Row="1" Margin="1 2" FontSize="10" Command="{Binding DownloadFilesCommand}" />
-            <Button Grid.Row="0" Grid.Column="4" Content="Save File" x:Name="btnSaveFile" Margin="1 2" Command="{Binding SaveFileCommand}" />
-            <Button Grid.Row="0" Grid.Column="5" Content="Clear data" x:Name="btnClearData" Margin="1 2" Command="{Binding ClearDataCommand}" />
+            <Button IsEnabled="{Binding ControlsEnabled}" Grid.Row="0" Grid.Column="1" Content="Choose File" x:Name="btnOpenFileDialog" Margin="1 2" Command="{Binding GetFileCommand}" />
+            <Button IsEnabled="{Binding ControlsEnabled}" Grid.Column="2" x:Name="btnProcessFile" Content="Process file..." Grid.Row="1" Margin="1 2" Command="{Binding ProcessFileCommand}" />
+            <Button IsEnabled="{Binding ControlsEnabled}" Grid.Column="3" x:Name="btnDownloadImages" Content="Download Images" Grid.Row="1" Margin="1 2" FontSize="10" Command="{Binding DownloadFilesCommand}" />
+            <Button IsEnabled="{Binding ControlsEnabled}" Grid.Row="0" Grid.Column="4" Content="Save File" x:Name="btnSaveFile" Margin="1 2" Command="{Binding SaveFileCommand}" />
+            <Button IsEnabled="{Binding ControlsEnabled}" Grid.Row="0" Grid.Column="5" Content="Clear data" x:Name="btnClearData" Margin="1 2" Command="{Binding ClearDataCommand}" />
         </Grid>
         <Grid>
             <Grid.ColumnDefinitions>
@@ -45,9 +45,9 @@
         </Grid>
         <TabControl Grid.Row="1">
             <TabItem Header="Dane">
-                <DataGrid ItemsSource="{Binding Produkty}" AutoGenerateColumns="False">
+                <DataGrid IsEnabled="{Binding ControlsEnabled}" ItemsSource="{Binding Produkty}" AutoGenerateColumns="False">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Id" Binding="{Binding Id, Mode=TwoWay}" />
+                        <DataGridTextColumn Header="Id" Binding="{Binding Id, Mode=TwoWay, ValidatesOnExceptions=True}" />
                         <DataGridTextColumn Header="Nazwa" Binding="{Binding Nazwa}" />
                         <DataGridTextColumn Header="Długi opis" Binding="{Binding DlugiOpis}" Width="100" />
                         <DataGridTextColumn Header="Dane techniczne" Binding="{Binding DaneTechniczne}" Width="100" />
@@ -78,7 +78,7 @@
                 </DataGrid>
             </TabItem>
             <TabItem Header="Zdjecia">
-                <DataGrid ItemsSource="{Binding ZdjeciaPobrane}" AutoGenerateColumns="True" IsReadOnly="True">
+                <DataGrid IsEnabled="{Binding ControlsEnabled}" ItemsSource="{Binding ZdjeciaPobrane}" AutoGenerateColumns="False" IsReadOnly="True">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Id" Binding="{Binding Id, Mode=TwoWay}" />
                         <DataGridTemplateColumn Header="Photos">
@@ -106,6 +106,6 @@
             </TabItem>
         </TabControl>
         
-        <ProgressBar Value="{Binding CurrentProgress}" Maximum="{Binding MaxProgress}" Grid.Row="2" Margin="0 2" />
+        <ProgressBar x:Name="pbMainProgressBar" Value="{Binding CurrentProgress}" Maximum="{Binding MaxProgress}" Grid.Row="2" Margin="0 2" />
     </Grid>
 </Window>

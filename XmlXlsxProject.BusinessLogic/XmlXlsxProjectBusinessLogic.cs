@@ -16,6 +16,8 @@ namespace XmlXlsxProject.BusinessLogic
 {
     public class XmlXlsxProjectBusinessLogic : IXmlXlsxBusinessLogic
     {
+        public event EventHandler<ReportProgressEventArgs> ReportProgress;
+
         public bool ProcessFiles(ref Produkty? produkty, string filepath, bool removeHtml)
         {
             try
@@ -49,12 +51,18 @@ namespace XmlXlsxProject.BusinessLogic
             for (int i = 0; i < produkty.ListaProduktow.Count; ++i)
             {
                 AddDataRowAndFormatting(produkty.ListaProduktow[i], wsDane, removeHtml, i);
+                AddPhotoRowAndFormatting(zdjeciaPobrane[i], wsZdjecia, i);
+
+                ReportProgress(this, new ReportProgressEventArgs
+                {
+                    Progress = i + 1
+                });
             }
 
-            for (int i = 0; i < zdjeciaPobrane.Count; ++i)
-            {
-                AddPhotoRowAndFormatting(zdjeciaPobrane[i], wsZdjecia, i);
-            }
+            //for (int i = 0; i < zdjeciaPobrane.Count; ++i)
+            //{
+                
+            //}
 
             wb.SaveAs(filepath);
 
@@ -64,7 +72,7 @@ namespace XmlXlsxProject.BusinessLogic
         public async Task<ObservableCollection<ZdjeciePobrane>> DownloadFiles(Produkty? produkty)
         {
             ObservableCollection<ZdjeciePobrane> result = new ObservableCollection<ZdjeciePobrane>();
-
+            
             string tempPath = Path.Combine(Directory.GetCurrentDirectory(), "PobraneZdjecia");
 
             if (!Directory.Exists(tempPath))
@@ -75,6 +83,7 @@ namespace XmlXlsxProject.BusinessLogic
             if (produkty == null) return result;
 
             HttpClient httpClient = new HttpClient();
+            int produktCounter = 0;
             foreach(Produkt produkt in produkty.ListaProduktow)
             {
                 ZdjeciePobrane zdjeciePobrane = new ZdjeciePobrane
@@ -84,7 +93,7 @@ namespace XmlXlsxProject.BusinessLogic
 
                 foreach(Zdjecie zd in produkt.Zdjecia.OrderBy(z => z.Pozycja))
                 {
-                    string tempFileName = Path.Combine(tempPath, Path.ChangeExtension(Path.GetFileName(Path.GetTempFileName()), Path.GetExtension(zd.URL)));
+                    string tempFileName = Path.Combine(tempPath, Path.ChangeExtension(Guid.NewGuid().ToString(), Path.GetExtension(zd.URL)));
                     HttpResponseMessage responseMessage = await httpClient.GetAsync(zd.URL.Trim());
 
                     if (responseMessage.StatusCode != System.Net.HttpStatusCode.OK) continue;
@@ -97,6 +106,10 @@ namespace XmlXlsxProject.BusinessLogic
                     zdjeciePobrane.PhotoPathList.Add(tempFileName);
                 }
 
+                ReportProgress(this, new ReportProgressEventArgs
+                {
+                    Progress = ++produktCounter
+                });
                 result.Add(zdjeciePobrane);
             }
 
