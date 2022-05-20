@@ -14,9 +14,10 @@ using System.Windows.Media.Imaging;
 
 namespace XmlXlsxProject.BusinessLogic
 {
-    public class XmlXlsxProjectBusinessLogic : IXmlXlsxBusinessLogic
+    public class XmlXlsxProjectBusinessLogic : IXmlXlsxBusinessLogic, IDisposable
     {
         public event EventHandler<ReportProgressEventArgs> ReportProgress;
+        private StreamWriter fileLogger = new StreamWriter(File.Open(Path.ChangeExtension("Log_" + Guid.NewGuid().ToString(), ".txt"), FileMode.Create, FileAccess.Write, FileShare.None));
 
         public bool ProcessFiles(ref Produkty? produkty, string filepath, bool removeHtml)
         {
@@ -34,7 +35,7 @@ namespace XmlXlsxProject.BusinessLogic
                 return true;
             } catch (Exception ex)
             {
-                Console.WriteLine($"Error while deserializing file: {filepath}, Error: {ex.Message}");
+                fileLogger.WriteLine($"[{DateTime.Now}] Error while deserializing file: {filepath}. Message: {ex.Message}\nStack trace: {ex.StackTrace}");
             }
 
             return false;
@@ -61,7 +62,14 @@ namespace XmlXlsxProject.BusinessLogic
                 });
             }
 
-            wb.SaveAs(filepath);
+            try
+            {
+                wb.SaveAs(filepath);
+            }
+            catch (Exception ex)
+            {
+                fileLogger.WriteLine($"[{DateTime.Now}] Error while saving file: {filepath}. Message: {ex.Message}\nStack trace: {ex.StackTrace}");
+            }
 
             return true;
         }
@@ -93,7 +101,11 @@ namespace XmlXlsxProject.BusinessLogic
                     string tempFileName = Path.Combine(tempPath, Path.ChangeExtension(Guid.NewGuid().ToString(), Path.GetExtension(zd.URL)));
                     HttpResponseMessage responseMessage = await httpClient.GetAsync(zd.URL.Trim());
 
-                    if (responseMessage.StatusCode != System.Net.HttpStatusCode.OK) continue;
+                    if (responseMessage.StatusCode != System.Net.HttpStatusCode.OK)
+                    {
+                        fileLogger.WriteLine($"[{DateTime.Now}] Error while downloading file: {zd.URL}. StatusCode: {responseMessage.StatusCode}");
+                        continue;
+                    }
 
                     using (FileStream fs = File.Open(tempFileName, FileMode.Create, FileAccess.Write, FileShare.None))
                     {
@@ -181,6 +193,20 @@ namespace XmlXlsxProject.BusinessLogic
                 {
                     if (!IsValidImage(fs)) continue;
                     wsZdjecia.AddPicture(fs).MoveTo(wsZdjecia.Cell(rowIndicator + 1, j + 2)).Scale(0.1);
+                }
+            }
+        }
+
+        public void Dispose()
+        {
+            try
+            {
+                fileLogger.Close();
+            } catch (Exception)
+            {
+                if (fileLogger != null)
+                {
+                    fileLogger.Close();
                 }
             }
         }
