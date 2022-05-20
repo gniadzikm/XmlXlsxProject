@@ -48,10 +48,27 @@ namespace XmlXlsxProject.Models
         [XmlElement(ElementName = "ilosc_wariantow")]
         public long IloscWariantow { get; set; }
 
+        public int IloscZdjec
+        {
+            get => Zdjecia.Count;
+        }
+
         [XmlIgnore]
         public decimal Marza
         {
             get => Math.Round((CenaZewnetrzna - CenaZewnetrznaHurt) / CenaZewnetrzna, 6);
+        }
+
+        [XmlIgnore]
+        public bool LessThanTwoPictures
+        {
+            get => Zdjecia.Count < 2;
+        }
+
+        [XmlIgnore]
+        public bool MarzaLessThan20
+        {
+            get => Marza < 0.20M;
         }
     }
 }

@@ -10,7 +10,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="*" MinHeight="50" />
             <RowDefinition Height="9*" MinHeight="250" />
-            <RowDefinition Height="*" MinHeight="50" />
+            <RowDefinition Height=".25*" MinHeight="50" />
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0">
@@ -22,17 +22,18 @@
                 <ColumnDefinition Width=".5*" />
                 <ColumnDefinition Width=".5*" />
             </Grid.ColumnDefinitions>
-            <TextBox Grid.Row="0" Grid.Column="0" IsReadOnly="True" IsEnabled="False" x:Name="tbFileName" Margin="1 2" Text="{Binding FileName}" />
-            <Button Grid.Column="2" x:Name="btnProcessFile" Content="Process file..." Grid.Row="1" Margin="1 2" Command="{Binding ProcessFileCommand}" />
+            <Grid Grid.Row="0" Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <TextBox Grid.Row="0" Grid.Column="0" IsReadOnly="True" IsEnabled="False" x:Name="tbFileName" Margin="1 2" Text="{Binding FileName}" />
+                <CheckBox Grid.Row="1" IsChecked="{Binding RemoveXml, Mode=TwoWay}" Content="Remove HTML from Długi Opis" />
+            </Grid>
             <Button Grid.Row="0" Grid.Column="1" Content="Choose File" x:Name="btnOpenFileDialog" Margin="1 2" Command="{Binding GetFileCommand}" />
-            <Button Grid.Row="0" Grid.Column="3" Content="Save File" x:Name="btnSaveFile" Margin="1 2" Command="{Binding SaveFileCommand}" />
-            <StackPanel Grid.Row="0" Grid.Column="4">
-                <TextBlock Text="Remove XML from Długi opis" />
-                <ComboBox>
-                    <ComboBoxItem Content="Yes" />
-                    <ComboBoxItem Content="No" />
-                </ComboBox>
-            </StackPanel>
+            <Button Grid.Column="2" x:Name="btnProcessFile" Content="Process file..." Grid.Row="1" Margin="1 2" Command="{Binding ProcessFileCommand}" />
+            <Button Grid.Column="3" x:Name="btnDownloadImages" Content="Download Images" Grid.Row="1" Margin="1 2" FontSize="10" Command="{Binding DownloadFilesCommand}" />
+            <Button Grid.Row="0" Grid.Column="4" Content="Save File" x:Name="btnSaveFile" Margin="1 2" Command="{Binding SaveFileCommand}" />
             <Button Grid.Row="0" Grid.Column="5" Content="Clear data" x:Name="btnClearData" Margin="1 2" Command="{Binding ClearDataCommand}" />
         </Grid>
         <Grid>
@@ -42,24 +43,69 @@
             </Grid.ColumnDefinitions>
 
         </Grid>
-        <DataGrid Grid.Row="1" ItemsSource="{Binding Produkty}" AutoGenerateColumns="False">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Id" Binding="{Binding Id, Mode=TwoWay}" />
-                <DataGridTextColumn Header="Nazwa" Binding="{Binding Nazwa}" />
-                <DataGridTextColumn Header="Długi opis" Binding="{Binding DlugiOpis}" Width="100" />
-                <DataGridTextColumn Header="Dane techniczne" Binding="{Binding DaneTechniczne}" Width="100" />
-                <DataGridTextColumn Header="Waga" Binding="{Binding Waga}" />
-                <DataGridTextColumn Header="Kod" Binding="{Binding Kod}" />
-                <DataGridTextColumn Header="ean" Binding="{Binding EAN}" />
-                <DataGridTextColumn Header="Status" Binding="{Binding Status}" />
-                <DataGridTextColumn Header="Typ" Binding="{Binding Typ}" />
-                <DataGridTextColumn Header="Cena zewnętrzna hurt" Binding="{Binding CenaZewnetrznaHurt}" />
-                <DataGridTextColumn Header="Cena zewnętrzna" Binding="{Binding CenaZewnetrzna}" />
-                <DataGridTextColumn Header="VAT" Binding="{Binding Vat}" />
-                <DataGridTextColumn Header="Ilość wariantów" Binding="{Binding IloscWariantow}" />
-                <DataGridTextColumn Header="Marża" Binding="{Binding Marza}" />
-            </DataGrid.Columns>
-        </DataGrid>
+        <TabControl Grid.Row="1">
+            <TabItem Header="Dane">
+                <DataGrid ItemsSource="{Binding Produkty}" AutoGenerateColumns="False">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Id" Binding="{Binding Id, Mode=TwoWay}" />
+                        <DataGridTextColumn Header="Nazwa" Binding="{Binding Nazwa}" />
+                        <DataGridTextColumn Header="Długi opis" Binding="{Binding DlugiOpis}" Width="100" />
+                        <DataGridTextColumn Header="Dane techniczne" Binding="{Binding DaneTechniczne}" Width="100" />
+                        <DataGridTextColumn Header="Waga" Binding="{Binding Waga}" />
+                        <DataGridTextColumn Header="Kod" Binding="{Binding Kod}" />
+                        <DataGridTextColumn Header="ean" Binding="{Binding EAN}" />
+                        <DataGridTextColumn Header="Status" Binding="{Binding Status}" />
+                        <DataGridTextColumn Header="Typ" Binding="{Binding Typ}" />
+                        <DataGridTextColumn Header="Cena zewnętrzna hurt" Binding="{Binding CenaZewnetrznaHurt}" />
+                        <DataGridTextColumn Header="Cena zewnętrzna" Binding="{Binding CenaZewnetrzna}" />
+                        <DataGridTextColumn Header="VAT" Binding="{Binding Vat}" />
+                        <DataGridTextColumn Header="Ilość wariantów" Binding="{Binding IloscWariantow}" />
+                        <DataGridTextColumn Header="Ilość zdjęć" Binding="{Binding IloscZdjec}" />
+                        <DataGridTextColumn Header="Marża" Binding="{Binding Marza}" />
+                    </DataGrid.Columns>
+                    <DataGrid.RowStyle>
+                        <Style TargetType="DataGridRow">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding LessThanTwoPictures}" Value="True">
+                                    <Setter Property="Background" Value="Red" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding MarzaLessThan20}" Value="True">
+                                    <Setter Property="Background" Value="Orange" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.RowStyle>
+                </DataGrid>
+            </TabItem>
+            <TabItem Header="Zdjecia">
+                <DataGrid ItemsSource="{Binding ZdjeciaPobrane}" AutoGenerateColumns="True" IsReadOnly="True">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Id" Binding="{Binding Id, Mode=TwoWay}" />
+                        <DataGridTemplateColumn Header="Photos">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <ScrollViewer HorizontalScrollBarVisibility="Auto">
+                                        <ItemsControl ItemsSource="{Binding PhotoPathList}">
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <StackPanel Orientation="Horizontal" />
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Image Source="{Binding }" MaxHeight="100" MaxWidth="100" />
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </ScrollViewer>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </TabItem>
+        </TabControl>
+        
         <ProgressBar Value="{Binding CurrentProgress}" Maximum="{Binding MaxProgress}" Grid.Row="2" Margin="0 2" />
     </Grid>
 </Window>

@@ -9,6 +9,7 @@ namespace XmlXslxProject.UI.ViewModels
     internal interface IMainWindowViewModel
     {
         void ProcessFile();
+        void DownloadFiles();
         void GetFile();
 
     }
