@@ -32,9 +32,9 @@
                 <CheckBox IsEnabled="{Binding ControlsEnabled}" Grid.Row="1" IsChecked="{Binding RemoveXml, Mode=TwoWay}" Content="Remove HTML from Długi Opis" />
             </Grid>
             <Button IsEnabled="{Binding ControlsEnabled}" Grid.Row="0" Grid.Column="1" Content="Choose File" x:Name="btnOpenFileDialog" Margin="1 2" Command="{Binding GetFileCommand}" />
-            <Button IsEnabled="{Binding ControlsEnabled}" Grid.Column="2" x:Name="btnProcessFile" Content="Process file..." Grid.Row="1" Margin="1 2" Command="{Binding ProcessFileCommand}" />
-            <Button IsEnabled="{Binding ControlsEnabled}" Grid.Column="3" x:Name="btnDownloadImages" Content="Download Images" Grid.Row="1" Margin="1 2" FontSize="10" Command="{Binding DownloadFilesCommand}" />
-            <Button IsEnabled="{Binding ControlsEnabled}" Grid.Row="0" Grid.Column="4" Content="Save File" x:Name="btnSaveFile" Margin="1 2" Command="{Binding SaveFileCommand}" />
+            <Button IsEnabled="{Binding OperationsEnabled}" Grid.Column="2" x:Name="btnProcessFile" Content="Process file..." Grid.Row="1" Margin="1 2" Command="{Binding ProcessFileCommand}" />
+            <Button IsEnabled="{Binding OperationsEnabled}" Grid.Column="3" x:Name="btnDownloadImages" Content="Download Images" Grid.Row="1" Margin="1 2" FontSize="10" Command="{Binding DownloadFilesCommand}" />
+            <Button IsEnabled="{Binding OperationsEnabled}" Grid.Row="0" Grid.Column="4" Content="Save File" x:Name="btnSaveFile" Margin="1 2" Command="{Binding SaveFileCommand}" />
             <Button IsEnabled="{Binding ControlsEnabled}" Grid.Row="0" Grid.Column="5" Content="Clear data" x:Name="btnClearData" Margin="1 2" Command="{Binding ClearDataCommand}" />
         </Grid>
         <Grid>

@@ -41,6 +41,7 @@ namespace XmlXslxProject.UI.ViewModels
             {
                 _fileName = value;
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(OperationsEnabled));
             }
             get => _fileName;
         }
@@ -92,6 +93,7 @@ namespace XmlXslxProject.UI.ViewModels
             {
                 _controlsEnabled = value;
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(OperationsEnabled));
             }
         }
 
@@ -103,6 +105,11 @@ namespace XmlXslxProject.UI.ViewModels
                 OnPropertyChanged();
             }
             get => _removeHtml;
+        }
+
+        public bool OperationsEnabled
+        {
+            get => _controlsEnabled && !string.IsNullOrWhiteSpace(_fileName);
         }
 
         private async void ProcessFile()
@@ -151,6 +158,12 @@ namespace XmlXslxProject.UI.ViewModels
 
         public async void SaveFile()
         {
+            if (IsFileNotProcessed())
+            {
+                MessageBox.Show("Please process the file first", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
             await Task.Run(() =>
             {
                 ControlsEnabled = false;
@@ -178,6 +191,12 @@ namespace XmlXslxProject.UI.ViewModels
 
         public async void DownloadFiles()
         {
+            if (IsFileNotProcessed())
+            {
+                MessageBox.Show("Please process the file first", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
             ControlsEnabled = false;
             ZdjeciaPobrane = await _xmlXlsxBusinessLogic.DownloadFiles(_produkty);
             MessageBox.Show("Download finished!", "Success", MessageBoxButton.OK, MessageBoxImage.None);
@@ -195,6 +214,11 @@ namespace XmlXslxProject.UI.ViewModels
             MaxProgress = 100;
             CurrentProgress = 0;
             GC.Collect();
+        }
+
+        private bool IsFileNotProcessed()
+        {
+            return _produkty == null || !_produkty.ListaProduktow.Any();
         }
 
         public ICommand ProcessFileCommand => new RelayCommand(ProcessFile);
