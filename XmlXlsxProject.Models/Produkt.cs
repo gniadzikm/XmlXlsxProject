@@ -3,8 +3,11 @@
 namespace XmlXlsxProject.Models
 {
     [XmlRoot(ElementName = "produkt")]
-    public class Produkt
+    public class Produkt : BaseUpdatableModel
     {
+        private decimal _cenaZewnetrznaHurt;
+        private decimal _cenaZewnetrzna;
+
         [XmlElement(ElementName = "id")]
         public long Id { get; set; }
 
@@ -37,10 +40,30 @@ namespace XmlXlsxProject.Models
         public string Typ { get; set; } = string.Empty;
 
         [XmlElement(ElementName = "cena_zewnetrzna_hurt")]
-        public decimal CenaZewnetrznaHurt { get; set; }
+        public decimal CenaZewnetrznaHurt 
+        {
+            get => _cenaZewnetrznaHurt;
+            set
+            {
+                _cenaZewnetrznaHurt = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(Marza));
+                OnPropertyChanged(nameof(MarzaLessThan20));
+            }
+        }
 
         [XmlElement(ElementName = "cena_zewnetrzna")]
-        public decimal CenaZewnetrzna { get; set; }
+        public decimal CenaZewnetrzna 
+        {
+            get => _cenaZewnetrzna;
+            set
+            {
+                _cenaZewnetrzna = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(Marza));
+                OnPropertyChanged(nameof(MarzaLessThan20));
+            }
+        }
 
         [XmlElement(ElementName = "vat")]
         public decimal Vat { get; set; }

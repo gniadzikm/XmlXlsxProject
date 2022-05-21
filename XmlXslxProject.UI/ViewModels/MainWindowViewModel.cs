@@ -15,7 +15,7 @@ using System;
 
 namespace XmlXslxProject.UI.ViewModels
 {
-    internal class MainWindowViewModel : BaseViewModel, IMainWindowViewModel
+    internal class MainWindowViewModel : BaseUpdatableModel, IMainWindowViewModel
     {
         private string _fileName = string.Empty;
         private string _saveFileName = string.Empty;

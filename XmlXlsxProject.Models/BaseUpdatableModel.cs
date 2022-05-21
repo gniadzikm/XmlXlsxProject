@@ -6,9 +6,9 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace XmlXslxProject.UI.ViewModels
+namespace XmlXlsxProject.Models
 {
-    public abstract class BaseViewModel : INotifyPropertyChanged
+    public abstract class BaseUpdatableModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;
 
