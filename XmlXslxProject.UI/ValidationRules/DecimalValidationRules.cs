@@ -8,7 +8,7 @@ using System.Windows.Controls;
 
 namespace XmlXslxProject.UI.ValidationRules
 {
-    internal class DecimalValidationRule : ValidationRule
+    public class DecimalValidationRule : ValidationRule
     {
         public override ValidationResult Validate(object value, CultureInfo cultureInfo)
         {

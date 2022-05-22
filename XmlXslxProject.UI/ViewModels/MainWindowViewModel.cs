@@ -21,7 +21,6 @@ namespace XmlXslxProject.UI.ViewModels
         private string _saveFileName = string.Empty;
         private Produkty _produkty = new Produkty();
         private ObservableCollection<ZdjeciePobrane> _zdjeciaPobrane = new ObservableCollection<ZdjeciePobrane>();
-        private long _maxProgress = 100;
         private long _currentProgress;
         private bool _removeHtml = true;
         private IXmlXlsxBusinessLogic _xmlXlsxBusinessLogic = new XmlXlsxProjectBusinessLogic();
@@ -52,6 +51,7 @@ namespace XmlXslxProject.UI.ViewModels
             {
                 _produkty.ListaProduktow = value;
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(MaxProgress));
             }
             get => _produkty.ListaProduktow;
         }
@@ -78,12 +78,11 @@ namespace XmlXslxProject.UI.ViewModels
 
         public long MaxProgress
         {
-            set
+            get
             {
-                _maxProgress = value;
-                OnPropertyChanged();
+                int currentCount = _produkty.ListaProduktow.Count;
+                return currentCount != 0 ? currentCount : 100;
             }
-            get => _maxProgress;
         }
 
         public bool ControlsEnabled
@@ -131,7 +130,6 @@ namespace XmlXslxProject.UI.ViewModels
                 }
 
                 Produkty = new ObservableCollection<Produkt>(produkty.ListaProduktow);
-                MaxProgress = produkty.ListaProduktow.Count;
 
                 ControlsEnabled = true;
                 GC.Collect();
@@ -211,9 +209,19 @@ namespace XmlXslxProject.UI.ViewModels
             _saveFileName = string.Empty;
             Produkty.Clear();
             ZdjeciaPobrane.Clear();
-            MaxProgress = 100;
             CurrentProgress = 0;
             GC.Collect();
+        }
+
+        public void DeleteRow(long Id)
+        {
+            Produkt? tempProdukt = Produkty.FirstOrDefault(p => p.Id == Id);
+
+            if (tempProdukt == null) return;
+
+            Produkty.Remove(tempProdukt);
+            OnPropertyChanged(nameof(MaxProgress));
+            OnPropertyChanged(nameof(OperationsEnabled));
         }
 
         private bool IsFileNotProcessed()
@@ -226,5 +234,6 @@ namespace XmlXslxProject.UI.ViewModels
         public ICommand SaveFileCommand => new RelayCommand(SaveFile);
         public ICommand DownloadFilesCommand => new RelayCommand(DownloadFiles);
         public ICommand ClearDataCommand => new RelayCommand(ClearData);
+        public ICommand DeleteRowCommand => new RelayCommand<long>(DeleteRow);
     }
 }

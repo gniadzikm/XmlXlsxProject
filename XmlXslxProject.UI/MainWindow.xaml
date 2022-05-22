@@ -119,6 +119,13 @@
                         </DataGridTextColumn>
                         <DataGridTextColumn Header="Ilość zdjęć" Binding="{Binding IloscZdjec}" IsReadOnly="True" />
                         <DataGridTextColumn Header="Marża" Binding="{Binding Marza}" IsReadOnly="True" />
+                        <DataGridTemplateColumn>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Content="Delete" Command="{Binding DataContext.DeleteRowCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" CommandParameter="{Binding Id}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
                     </DataGrid.Columns>
                     <DataGrid.RowStyle>
                         <Style TargetType="DataGridRow">
