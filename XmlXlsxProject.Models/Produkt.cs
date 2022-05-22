@@ -79,7 +79,7 @@ namespace XmlXlsxProject.Models
         [XmlIgnore]
         public decimal Marza
         {
-            get => Math.Round((CenaZewnetrzna - CenaZewnetrznaHurt) / CenaZewnetrzna, 6);
+            get => CenaZewnetrzna != 0 ? Math.Round((CenaZewnetrzna - CenaZewnetrznaHurt) / CenaZewnetrzna, 6) : 0;
         }
 
         [XmlIgnore]
